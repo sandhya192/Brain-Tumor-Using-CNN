@@ -141,7 +141,7 @@ function displayResults(data) {
             </div>
             <div class="segmentation-image">
                 <h5><i class="fas fa-layer-group"></i> Tumor Segmentation</h5>
-                <img src="data:image/png;base64,${data.mask_image}" alt="Segmentation Mask">
+                <img src="data:image/png;base64,${data.mask_base64}" alt="Segmentation Mask">
             </div>
         </div>
         
