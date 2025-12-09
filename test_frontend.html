@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-box {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button {
+            background: #4F46E5;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #4338CA; }
+        #result { margin-top: 20px; white-space: pre-wrap; }
+        input[type="file"] {
+            margin: 10px 0;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Frontend-Backend Connection Test</h1>
+    
+    <div class="test-box">
+        <h2>Test 1: Check API Status</h2>
+        <button onclick="testAPIStatus()">Test API Connection</button>
+        <div id="status-result"></div>
+    </div>
+    
+    <div class="test-box">
+        <h2>Test 2: Upload & Classify Image</h2>
+        <input type="file" id="test-file" accept="image/*">
+        <button onclick="testClassification()">Test Classification</button>
+        <div id="classify-result"></div>
+    </div>
+    
+    <div class="test-box">
+        <h2>Test 3: Use Sample Dataset Image</h2>
+        <button onclick="testWithSampleImage()">Test with Sample Glioma Image</button>
+        <div id="sample-result"></div>
+    </div>
+
+    <script>
+        // Test 1: API Status
+        async function testAPIStatus() {
+            const resultDiv = document.getElementById('status-result');
+            resultDiv.innerHTML = '<p class="info">⏳ Testing API connection...</p>';
+            
+            try {
+                const response = await fetch('/api/model-status');
+                const data = await response.json();
+                
+                console.log('API Status Response:', data);
+                
+                resultDiv.innerHTML = `
+                    <p class="success">✅ API Connected Successfully!</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('API Error:', error);
+                resultDiv.innerHTML = `
+                    <p class="error">❌ API Connection Failed</p>
+                    <p>Error: ${error.message}</p>
+                    <p>Make sure Flask server is running on port 5000</p>
+                `;
+            }
+        }
+        
+        // Test 2: Classification with user uploaded file
+        async function testClassification() {
+            const fileInput = document.getElementById('test-file');
+            const resultDiv = document.getElementById('classify-result');
+            
+            if (!fileInput.files || !fileInput.files[0]) {
+                resultDiv.innerHTML = '<p class="error">❌ Please select an image file first</p>';
+                return;
+            }
+            
+            resultDiv.innerHTML = '<p class="info">⏳ Uploading and classifying...</p>';
+            
+            try {
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                
+                console.log('Uploading file:', fileInput.files[0].name);
+                
+                const response = await fetch('/api/classify', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                console.log('Classification Response:', data);
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<p class="error">❌ Error: ${data.error}</p>`;
+                    return;
+                }
+                
+                const probHtml = Object.entries(data.probabilities)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([cls, prob]) => `${cls}: ${(prob * 100).toFixed(2)}%`)
+                    .join('<br>');
+                
+                resultDiv.innerHTML = `
+                    <p class="success">✅ Classification Successful!</p>
+                    <h3>Predicted: ${data.predicted_class}</h3>
+                    <h4>Confidence: ${(data.confidence * 100).toFixed(2)}%</h4>
+                    <p><strong>All Probabilities:</strong></p>
+                    <div>${probHtml}</div>
+                `;
+            } catch (error) {
+                console.error('Classification Error:', error);
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Classification Failed</p>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        // Test 3: Use dataset sample image
+        async function testWithSampleImage() {
+            const resultDiv = document.getElementById('sample-result');
+            resultDiv.innerHTML = '<p class="info">⏳ Testing with sample dataset image...</p>';
+            
+            try {
+                // Fetch a sample image from the dataset
+                const response = await fetch('/classification_task/test/glioma/brisc2025_test_00001_gl_ax_t1.jpg');
+                const blob = await response.blob();
+                
+                // Create form data
+                const formData = new FormData();
+                formData.append('file', blob, 'test_image.jpg');
+                
+                console.log('Testing with sample dataset image');
+                
+                // Classify
+                const classifyResponse = await fetch('/api/classify', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await classifyResponse.json();
+                
+                console.log('Sample Image Response:', data);
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<p class="error">❌ Error: ${data.error}</p>`;
+                    return;
+                }
+                
+                const probHtml = Object.entries(data.probabilities)
+                    .sort((a, b) => b[1] - a[1])
+                    .map(([cls, prob]) => `${cls}: ${(prob * 100).toFixed(2)}%`)
+                    .join('<br>');
+                
+                resultDiv.innerHTML = `
+                    <p class="success">✅ Sample Image Classification Successful!</p>
+                    <p class="info">Expected: glioma | Got: ${data.predicted_class}</p>
+                    <h3>Predicted: ${data.predicted_class}</h3>
+                    <h4>Confidence: ${(data.confidence * 100).toFixed(2)}%</h4>
+                    <p><strong>All Probabilities:</strong></p>
+                    <div>${probHtml}</div>
+                `;
+            } catch (error) {
+                console.error('Sample Test Error:', error);
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Sample Test Failed</p>
+                    <p>Error: ${error.message}</p>
+                `;
+            }
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            console.log('Frontend Test Page Loaded');
+            console.log('Testing API connection automatically...');
+            testAPIStatus();
+        });
+    </script>
+</body>
+</html>

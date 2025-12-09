@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# PyTorch models
+*.pth
+*.pt
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+uploads/
+outputs/*.pth
+outputs/*.json
+outputs/*.txt
+
+# Large datasets (keep structure, ignore content)
+classification_task/train/
+classification_task/test/
+segmentation_task/train/
+segmentation_task/test/
+test_images/
+
+# Logs
+*.log

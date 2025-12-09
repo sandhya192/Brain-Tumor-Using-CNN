@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brain Tumor Classification - BRISC 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-brain logo-icon"></i>
+                <span class="logo-text">BRISC 2025</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="/classify" class="active"><i class="fas fa-microscope"></i> Classification</a></li>
+                <li><a href="/segment"><i class="fas fa-project-diagram"></i> Segmentation</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header-section">
+        <div class="container">
+            <div class="page-header-content">
+                <div class="page-icon">
+                    <i class="fas fa-microscope"></i>
+                </div>
+                <h1 class="page-title">Brain Tumor Classification</h1>
+                <p class="page-description">Upload an MRI scan to classify the tumor type using our ResNet-50 model</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container app-container">
+        <div class="app-layout">
+            <!-- Upload Section -->
+            <div class="upload-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-cloud-upload-alt"></i> Upload MRI Image</h3>
+                    <p>Drag and drop or click to select</p>
+                </div>
+                
+                <div class="upload-zone" id="upload-area">
+                    <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    <div class="upload-placeholder" id="upload-placeholder">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h4>Click to Upload or Drag & Drop</h4>
+                        <p>Supports: JPG, PNG, JPEG (Max 16MB)</p>
+                        <div class="supported-formats">
+                            <span class="format-badge"><i class="fas fa-check"></i> .jpg</span>
+                            <span class="format-badge"><i class="fas fa-check"></i> .png</span>
+                            <span class="format-badge"><i class="fas fa-check"></i> .jpeg</span>
+                        </div>
+                    </div>
+                    <div class="preview-container" id="preview-container" style="display: none;">
+                        <img id="preview-image" class="preview-image">
+                        <button class="btn-remove" id="remove-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary btn-full btn-large" id="classify-btn" disabled>
+                    <i class="fas fa-microscope"></i> Classify Image
+                </button>
+
+                <div class="info-box">
+                    <h4><i class="fas fa-info-circle"></i> How it Works</h4>
+                    <ol>
+                        <li>Upload a brain MRI scan (T1-weighted recommended)</li>
+                        <li>Our ResNet-50 model analyzes the image</li>
+                        <li>Get classification results with confidence scores</li>
+                        <li>View probability distribution across all tumor types</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="results-panel" id="results-panel">
+                <div class="panel-header">
+                    <h3><i class="fas fa-chart-bar"></i> Classification Results</h3>
+                    <p>AI-powered analysis</p>
+                </div>
+                
+                <div id="results-content" class="results-content">
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>No Results Yet</h4>
+                        <p>Upload an MRI scan and click classify to see results</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 BRISC Brain Tumor Analysis. For research and educational purposes only.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/classify.js') }}"></script>
+</body>
+</html>

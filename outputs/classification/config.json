@@ -1,0 +1,12 @@
+{
+    "data_root": "d:\\Brain Tumor Project\\brisc2025",
+    "batch_size": 32,
+    "num_epochs": 50,
+    "learning_rate": 0.001,
+    "img_size": 224,
+    "model_name": "resnet50",
+    "num_workers": 4,
+    "augmentation": true,
+    "patience": 10,
+    "output_dir": "outputs/classification"
+}
