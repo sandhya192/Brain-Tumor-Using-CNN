@@ -1,5 +1,5 @@
 """
-Brain Tumor Classification Training Script
+Brain Tumor Classification Training Script (ResNet-50)
 BRISC 2025 Dataset - Multi-class Classification (Glioma, Meningioma, Pituitary, No Tumor)
 """
 
@@ -102,7 +102,7 @@ def get_transforms(img_size=224, augment=True):
 
 def create_model(num_classes=4, model_name='resnet50', pretrained=True):
     """
-    Create a CNN model for classification
+    Create a ResNet-50 model for classification
     
     Args:
         num_classes (int): Number of output classes
@@ -110,7 +110,7 @@ def create_model(num_classes=4, model_name='resnet50', pretrained=True):
         pretrained (bool): Use pretrained weights
     
     Returns:
-        torch.nn.Module: CNN model
+        torch.nn.Module: ResNet-50 model
     """
     if model_name == 'resnet50':
         model = models.resnet50(pretrained=pretrained)

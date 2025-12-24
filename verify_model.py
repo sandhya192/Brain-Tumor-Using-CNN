@@ -1,5 +1,5 @@
 """
-Diagnostic: Verify Model Class Mappings and Test Classification
+Diagnostic: Verify Model Class Mappings and Test Classification (ResNet-50)
 """
 
 import torch
@@ -10,7 +10,7 @@ import os
 import numpy as np
 
 print("="*80)
-print("MODEL DIAGNOSTIC - Class Label Verification")
+print("MODEL DIAGNOSTIC - Class Label Verification (ResNet-50)")
 print("="*80)
 
 # Load model
