@@ -1,0 +1,11 @@
+{
+    "data_root": "d:\\Brain Tumor Project\\brisc2025",
+    "batch_size": 16,
+    "num_epochs": 100,
+    "learning_rate": 0.001,
+    "img_size": 256,
+    "num_workers": 4,
+    "augmentation": true,
+    "patience": 15,
+    "output_dir": "outputs/segmentation"
+}
